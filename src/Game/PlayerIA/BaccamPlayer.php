@@ -17,7 +17,42 @@ class BaccamPlayer extends Player
 
     public function getChoice()
     {
-        // -------------------------------------    -----------------------------------------------------
+      $opp_paper = ($this->result->getStatsFor($this->opponentSide)['paper'] + 1)/($this->result->getNbRound() + 1);
+      $opp_scissors = ($this->result->getStatsFor($this->opponentSide)['scissors'] + 1)/($this->result->getNbRound() + 1);
+      $opp_rock = ($this->result->getStatsFor($this->opponentSide)['rock'] + 1)/($this->result->getNbRound() + 1);
+
+
+        $choice = parent::paperChoice();
+        $last = $this->result->getLastChoiceFor($this->opponentSide);
+        $opponent = $this->result->getChoicesFor($this->opponentSide);
+        $last2 = $last;
+        // si deux coup consecutif alors faire le coup gagnant
+        if ($this->result->getNbRound() > 1)
+        { $last2 = $opponent[ $this->result->getNbRound() - 1]; }
+        if ($last == $last2 && $this->result->getNbRound() > 1) {
+          if ($last == parent::paperChoice()) {
+            return parent::scissorsChoice();
+          } elseif ($last == parent::rockChoice()) {
+            return parent::paperChoice();
+          } else {
+            return parent::rockChoice();
+          }
+        }
+
+        if ($this->result->getNbRound() > 1) {
+            if ($opp_paper > 0.35) {
+              return parent::scissorsChoice();
+            } elseif ($opp_rock > 0.35) {
+              return parent::paperChoice();
+            } else {
+              return parent::rockChoice();
+            }
+        }
+
+        
+        return $choice;
+    }
+    // -------------------------------------    -----------------------------------------------------
         // How to get my Last Choice           ?    $this->result->getLastChoiceFor($this->mySide) -- if 0 (first round)
         // How to get the opponent Last Choice ?    $this->result->getLastChoiceFor($this->opponentSide) -- if 0 (first round)
         // -------------------------------------    -----------------------------------------------------
@@ -40,33 +75,4 @@ class BaccamPlayer extends Player
         // -------------------------------------    -----------------------------------------------------
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
-
-        $choice = parent::paperChoice();
-        $last = $this->result->getLastChoiceFor($this->opponentSide);
-        $opponent = $this->result->getChoicesFor($this->opponentSide);
-        $last2 = $last;
-        // si deux coup consecutif alors faire le coup gagnant
-        if ($this->result->getNbRound() > 1)
-        { $last2 = $opponent[ $this->result->getNbRound() - 1]; }
-        if ($last == $last2 && $this->result->getNbRound() > 1) {
-          if ($last == parent::paperChoice()) {
-            return parent::scissorsChoice();
-          } elseif ($last == parent::rockChoice()) {
-            return parent::paperChoice();
-          } else {
-            return parent::rockChoice();
-          }
-        }
-        // Shadow follow
-        if ($this->result->getNbRound() > 1) {
-            if ($last == parent::paperChoice()) {
-              return parent::scissorsChoice();
-            } elseif ($last == parent::rockChoice()) {
-              return parent::paperChoice();
-            } else {
-              return parent::rockChoice();
-            }
-        }
-        return $choice;
-    }
 };
