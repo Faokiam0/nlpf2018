@@ -43,6 +43,19 @@ class BaccamPlayer extends Player
 
         $choice = parent::rockChoice();
         $last = $this->result->getLastChoiceFor($this->opponentSide);
+        $opponent = $this->result->getChoicesFor($this->opponentSide);
+        $last2 = $last;
+        if ($this->result->getNbRound() > 2)
+        { $last2 = $opponent[ $this->result->getNbRound() - 2]; }
+        if ($last == $last2 && $this->result->getNbRound() > 2) {
+          if ($last == parent::paperChoice()) {
+            return parent::rockChoice();
+          } elseif ($last == parent::rockChoice()) {
+            return parent::scissorsChoice();
+          } else {
+            return parent::paperChoice();
+          }
+        }
         if ($this->result->getNbRound() > 1) {
             if ($last == parent::paperChoice()) {
               return parent::scissorsChoice();
