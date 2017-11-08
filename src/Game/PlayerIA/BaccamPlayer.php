@@ -45,16 +45,16 @@ class BaccamPlayer extends Player
         $last = $this->result->getLastChoiceFor($this->opponentSide);
         $opponent = $this->result->getChoicesFor($this->opponentSide);
         $last2 = $last;
-        // si deux coup consecutif alors faire le coup perdant
+        // si deux coup consecutif alors faire le coup gagnant
         if ($this->result->getNbRound() > 1)
         { $last2 = $opponent[ $this->result->getNbRound() - 1]; }
         if ($last == $last2 && $this->result->getNbRound() > 1) {
           if ($last == parent::paperChoice()) {
-            return parent::rockChoice();
-          } elseif ($last == parent::rockChoice()) {
             return parent::scissorsChoice();
-          } else {
+          } elseif ($last == parent::rockChoice()) {
             return parent::paperChoice();
+          } else {
+            return parent::rockChoice();
           }
         }
         // Shadow follow
