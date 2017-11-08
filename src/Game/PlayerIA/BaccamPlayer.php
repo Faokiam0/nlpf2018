@@ -41,8 +41,17 @@ class BaccamPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        $choice = parent::paperChoice();
-
+        $choice = parent::rockChoice();
+        $last = $this->result->getLastChoiceFor($this->opponentSide);
+        if ($this->result->getNbRound() > 1) {
+            if ($last == parent::paperChoice()) {
+              return parent::scissorsChoice();
+            } elseif ($last == parent::rockChoice()) {
+              return parent::paperChoice();
+            } else {
+              return parent::rockChoice();
+            }
+        }
         return $choice;
     }
 };
